@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Gooners - Servizi di accompagniatrici trans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow 3s linear infinite;
+            font-weight: bold;
+        }
+
+        @keyframes rainbow {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .image-container2 {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .hero-image {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 5px solid #667eea;
+            transition: transform 0.3s;
+            filter: blur(20px);
+        }
+
+        .hero-image.uncensored {
+            filter: blur(0);
+        }
+
+        .censored-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .censored-overlay:hover {
+            background: rgba(255, 0, 0, 1);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .censored-overlay.hidden {
+            display: none;
+        }
+
+        .warning-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .password-box h3 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .password-box input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .password-box button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0.5rem;
+        }
+
+        .password-box button:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .image-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .story-section {
+            background: #f8f9fa;
+            padding: 3rem 2rem;
+        }
+
+        .story-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .story-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .features {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        #servizi,
+        #chi-siamo {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-item {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            border: 3px solid #667eea;
+        }
+
+        .service-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .service-item h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .service-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 1rem 0;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .service-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .service-features li:before {
+            content: "✓ ";
+            color: #00ff00;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-member {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .team-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto 1rem;
+            overflow: hidden;
+            /* Questa è la chiave! */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Fa sì che l'immagine copra tutto il cerchio */
+        }
+
+        .team-member h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .team-member p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="logo"><span class="rainbow-text">Sigma Gooners</span></div>
+            <ul class="nav-links">
+                <li><a onclick="showPage('home')">Home</a></li>
+                <li><a onclick="showPage('servizi')">Servizi</a></li>
+                <li><a onclick="showPage('chi-siamo')">Chi Siamo</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="home" class="page active">
+            <section class="hero">
+                <h1>Benvenuti su <span class="rainbow-text">Sigma Gooners</span></h1>
+                <p>Servizi di segreteria rettale con un approccio inclusivo e innovativo per l'esigenza dei clienti
+                    <span class="rainbow-text"> (trans, piedini)</span>
+                </p>
+            </section>
+
+            <section class="story-section">
+                <div class="image-container2">
+                    <img src="fotohot/gangbang.jpeg" alt="Team Photo" class="hero-image" id="censoredImage">
+                    <div class="censored-overlay" id="censoredOverlay" onclick="openPasswordModal()">
+                        <div class="warning-icon">⚠️</div>
+                        <h3>CENSURATO</h3>
+                        <p>Clicca per inserire la password</p>
+                    </div>
+                </div>
+
+                <div class="password-modal" id="passwordModal">
+                    <div class="password-box">
+                        <h3>Inserisci la Password</h3>
+                        <input type="password" id="passwordInput" placeholder="Password...">
+                        <div>
+                            <button onclick="checkPassword()">Conferma</button>
+                            <button onclick="closePasswordModal()">Annulla</button>
+                        </div>
+                        <p class="error-message" id="errorMessage">Password errata!</p>
+                    </div>
+                </div>
+                <br><br><br><br>
+                <div class="story-content">
+                    <h2>La Nostra Storia</h2>
+                    <p>
+                        <span class="rainbow-text">Sigma Gooners</span> I Gooners nascono nella 3ID del Marconi pekke
+                        Ivan Sign voleva giocare a Roblox con xXmArtina012Xx.
+                        Dopo siamo diventati <span class="rainbow-text">Papponi</span> perchè volevamo fare dei soldini
+                        veloci veloci
+                    </p>
+                </div>
+
+                <div class="cta-buttons">
+                    <a onclick="showPage('servizi')" class="btn btn-primary">Scopri i Nostri Servizi</a>
+                    <a onclick="showPage('chi-siamo')" class="btn btn-secondary">Chi Siamo</a>
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <h3>🎯 Professionalità</h3>
+                    <p>Il nostro team è formato da <span class="rainbow-text">gooners</span> esperti con esperienza
+                        pluriennale nel settore delle seghe e delle trans.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌈 Inclusività</h3>
+                    <p>Crediamo in un ambiente di lavoro aperto e rispettoso, dove ogni persona può esprimere il proprio
+                        potenziale. Per cuetso ci piacciono le trans</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Efficienza</h3>
+                    <p>Ottimizziamo i vostri processi anali per permettervi di concentrarvi sul <span
+                            class="rainbow-text">culo</span> e non sulle palle della "donna".</p>
+                </div>
+            </section>
+        </div>
+
+        <div id="servizi" class="page">
+            <h2 class="page-title">I Nostri Servizi</h2>
+            <div class="services-grid">
+                <div class="service-item">
+                    <h3>Little to no ass</h3>
+                    <div class="service-price">€1,5/mese</div>
+                    <p>Perfetto per chi viene in fretta e a chi non ci piace il culo</p>
+                    <ul class="service-features">
+                        <li>Gestione agenda e appuntamenti</li>
+                        <li>Boccaciucci con le mani</li>
+                        <li>sbola amole dopo max 3 minuti</li>
+                        <li>Assistenza 1 giorni/anno</li>
+                        <li>Report mensile sbollate amole</li>
+                    </ul>
+                </div>
+
+                <div class="service-item">
+                    <h3>Big black Adam</h3>
+                    <div class="service-price">€9.67/mese</div>
+                    <p>Ideale per chi ama farsi dominare</p>
+                    <ul class="service-features">
+                        <li>Tutto del piano precedente</li>
+                        <li>Disponibilità manette rosa di hello kitty</li>
+                        <li>sbola amole dopo max 15 minuti</li>
+                        <li>Organizzazione anale</li>
+                        <li>Assistenza 1.5 giorni/settimana</li>
+                        <li>Supporto multilingue (per leccare il culo)</li>
+                        <li>sbolate ilimitate</li>
+                    </ul>
+                </div>
+
+
+                <div class="service-item">
+                    <h3><span class="rainbow-text">Big black Gang bang piedini</span></h3>
+                    <div class="service-price">€19.69/mese</div>
+                    <p>Soluzione completa per grandi amanti dei gang bang (dove tu sei al <span
+                            class="rainbow-text">centro</span>) e dei <span class="rainbow-text">piedini</span></p>
+                    <ul class="service-features">
+                        <li>Personale altamente negro</li>
+                        <li>Possono scoparti fino a 100 uomini trans</li>
+                        <li>Disponibilità forever and ever</li>
+                        <li>Boccaciucci senza mani</li>
+                        <li>sbola amole quando vuoi</li>
+                        <li>Report personalizzati settimanali su quanta sbola hai preso amole</li>
+                        <li>Consulenza strategica</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <a onclick="showPage('home')" class="btn btn-secondary">Torna alla Home</a>
+                <a onclick="showPage('chi-siamo')" class="btn btn-primary">Chi Siamo</a>
+            </div>
+        </div>
+
+        <div id="chi-siamo" class="page">
+            <h2 class="page-title">Il Nostro Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/papino.png" alt=""></div>
+                    <h3><span class="rainbow-text">Papino</span></h3>
+                    <p>Esperta in festini con bambini di 10 anni senza esperienza nel settore. Ama
+                        l'organizzazione e la precisione.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/bennygay.png" alt=""></div>
+                    <h3>Benny Gay</h3>
+                    <p>Specialista in comunicazione rettale e gestione anale. Parla 0 lingue e ha lavorato per
+                        diddy come invitato speciale nei festini alla tenera età di 10 anni.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/baffetto.png" alt=""></div>
+                    <h3>Peppe Nitts</h3>
+                    <p>Coordinatrice senior con passione per le palle pelose, grosse e nere. Esperta in multitasking
+                        nelle seghe e footjob.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/ximenes.png" alt=""></div>
+                    <h3>SalaManalamenes</h3>
+                    <p>Assistente esecutivo di rifiuti amorosi. Ama i maschi per questo spezza il cuore
+                        alle bionde.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/ivanbocca.png" alt=""></div>
+                    <h3>Ivana Firma</h3>
+                    <p>Specialista in bocchini (guarda <span class="rainbow-text">Papino</span> senza mani). Precisione
+                        e affidabilità nello scappellare i colleghi.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/sempedofile.png" alt=""></div>
+                    <h3>Sem&m's</h3>
+                    <p>Esperto in pedofilia con master in piedologia. Gestisce il traffico di trans dal Brasile.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/67.png" alt=""></div>
+                    <h3>Neck Hurt</h3>
+                    <p>Cordinatore eventi con nudisti e attenzione alle fughe di bambini. Ha organizzato oltre 200
+                        cocain-party.</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="team-photo"><img src="fotohot/fucile.png" alt=""></div>
+                    <h3>Luke the pdf file</h3>
+                    <p>Assistente multilingue specializzato in spaccio di coca. Ricercato dall'interpol. Parla tutte le
+                        lingue della strada
+                        fluentemente.</p>
+                </div>
+            </div>
+            <div class="cta-buttons">
+                <a onclick="showPage('home')" class="btn btn-secondary">Torna alla Home</a>
+                <a onclick="showPage('servizi')" class="btn btn-primary">I Nostri Servizi</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 <span class="rainbow-text">Sigma Gooners</span>. Tutti i diritti riservati.</p>
+        <p>Servizi di segreteria professionale e inclusiva</p>
+    </footer>
+
+    <script>
+        function showPage(pageName) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            const targetPage = document.getElementById(pageName);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            window.scrollTo(0, 0);
+        }
+        function openPasswordModal() {
+            document.getElementById('passwordModal').classList.add('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === 'pornogayliamo') {
+                document.getElementById('censoredImage').classList.add('uncensored');
+                document.getElementById('censoredOverlay').classList.add('hidden');
+                closePasswordModal();
+            } else {
+                document.getElementById('errorMessage').classList.add('show');
+            }
+        }
+
+        document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+
+</html>
