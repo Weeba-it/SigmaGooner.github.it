@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Serie di Fourier</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            grid-column: 1 / -1;
+        }
+
+        .coefficients {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .coeff-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .coeff-item strong {
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .formula {
+            background: #e8eaf6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 300px;
+            background: white;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Calcolatore Serie di Fourier</h1>
+            <p>Calcola i coefficienti di Fourier per diverse forme d'onda</p>
+        </div>
+
+        <div class="content">
+            <div class="panel">
+                <h2>Parametri di Input</h2>
+                
+                <div class="form-group">
+                    <label for="waveform">Forma d'onda:</label>
+                    <select id="waveform">
+                        <option value="square">Onda Quadra</option>
+                        <option value="square_positive">Onda Quadra Positiva</option>
+                        <option value="sawtooth">Onda a Dente di Sega</option>
+                        <option value="triangle">Onda Triangolare</option>
+                        <option value="halfwave">Onda Rettificata (Half-wave)</option>
+                        <option value="fullwave">Onda Rettificata (Full-wave)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="amplitude">Ampiezza (A):</label>
+                    <input type="number" id="amplitude" value="1" step="0.1" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="frequency">Frequenza (f) [Hz]:</label>
+                    <input type="number" id="frequency" value="1" step="0.1" min="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="harmonics">Numero di Armoniche:</label>
+                    <input type="number" id="harmonics" value="5" step="1" min="1" max="20">
+                </div>
+
+                <button onclick="calculate()">Calcola Coefficienti</button>
+            </div>
+
+            <div class="panel">
+                <h2>Visualizzazione</h2>
+                <canvas id="waveCanvas"></canvas>
+                <div class="info">
+                    <strong>Legenda:</strong> 
+                    <span style="color: #ff3333; font-weight: bold;">━━━ Forma d'onda originale</span> | 
+                    <span style="color: #3366ff; font-weight: bold;">━━━ Approssimazione di Fourier</span>
+                </div>
+            </div>
+
+            <div class="panel results">
+                <h2>Risultati</h2>
+                <div id="results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const waveform = document.getElementById('waveform').value;
+            const A = parseFloat(document.getElementById('amplitude').value);
+            const f = parseFloat(document.getElementById('frequency').value);
+            const N = parseInt(document.getElementById('harmonics').value);
+            
+            const omega = 2 * Math.PI * f;
+            
+            let a0, an, bn, description;
+            const coeffs = [];
+            
+            switch(waveform) {
+                case 'square':
+                    a0 = 0;
+                    description = "Onda Quadra";
+                    for(let n = 1; n <= N; n++) {
+                        an = 0;
+                        bn = (n % 2 === 1) ? (4 * A) / (n * Math.PI) : 0;
+                        coeffs.push({n, an, bn});
+                    }
+                    break;
+                
+                case 'square_positive':
+                    a0 = A / 2;
+                    description = "Onda Quadra Positiva";
+                    for(let n = 1; n <= N; n++) {
+                        an = 0;
+                        bn = (n % 2 === 1) ? (2 * A) / (n * Math.PI) : 0;
+                        coeffs.push({n, an, bn});
+                    }
+                    break;
+                    
+                case 'sawtooth':
+                    a0 = 0;
+                    description = "Onda a Dente di Sega";
+                    for(let n = 1; n <= N; n++) {
+                        an = 0;
+                        bn = -(2 * A) / (n * Math.PI);
+                        coeffs.push({n, an, bn});
+                    }
+                    break;
+                    
+                case 'triangle':
+                    a0 = 0;
+                    description = "Onda Triangolare";
+                    for(let n = 1; n <= N; n++) {
+                        an = (n % 2 === 1) ? (8 * A) / (Math.pow(n * Math.PI, 2)) * (n % 4 === 1 ? 1 : -1) : 0;
+                        bn = 0;
+                        coeffs.push({n, an, bn});
+                    }
+                    break;
+                    
+                case 'halfwave':
+                    a0 = A / Math.PI;
+                    description = "Onda Rettificata (Half-wave)";
+                    for(let n = 1; n <= N; n++) {
+                        if(n === 1) {
+                            an = A / 2;
+                            bn = 0;
+                        } else if(n % 2 === 0) {
+                            an = -(2 * A) / (Math.PI * (n * n - 1));
+                            bn = 0;
+                        } else {
+                            an = 0;
+                            bn = 0;
+                        }
+                        coeffs.push({n, an, bn});
+                    }
+                    break;
+                    
+                case 'fullwave':
+                    a0 = (2 * A) / Math.PI;
+                    description = "Onda Rettificata (Full-wave)";
+                    for(let n = 1; n <= N; n++) {
+                        if(n % 2 === 0) {
+                            an = -(4 * A) / (Math.PI * (n * n - 1));
+                            bn = 0;
+                        } else {
+                            an = 0;
+                            bn = 0;
+                        }
+                        coeffs.push({n, an, bn});
+                    }
+                    break;
+            }
+            
+            displayResults(description, a0, coeffs, omega, f);
+            drawWaveform(waveform, a0, coeffs, omega, A);
+        }
+        
+        function displayResults(desc, a0, coeffs, omega, f) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `<div class="formula">
+                <strong>Serie di Fourier per ${desc}:</strong><br><br>
+                f(t) = a₀ + Σ[aₙcos(nωt) + bₙsin(nωt)]<br>
+                dove ω = 2πf = ${omega.toFixed(4)} rad/s
+            </div>`;
+            
+            html += `<div class="coefficients">`;
+            html += `<div class="coeff-item"><strong>a₀ (componente continua)</strong> = ${a0.toFixed(6)}</div>`;
+            
+            coeffs.forEach(c => {
+                if(c.an !== 0 || c.bn !== 0) {
+                    html += `<div class="coeff-item">
+                        <strong>n = ${c.n}:</strong><br>
+                        a${c.n} = ${c.an.toFixed(6)}<br>
+                        b${c.n} = ${c.bn.toFixed(6)}
+                    </div>`;
+                }
+            });
+            
+            html += `</div>`;
+            
+            html += `<div class="formula" style="margin-top: 20px;">
+                <strong>Formula esplicita:</strong><br>
+                f(t) = ${a0.toFixed(4)}`;
+            
+            coeffs.forEach(c => {
+                if(c.an !== 0) {
+                    html += ` + ${c.an.toFixed(4)}cos(${c.n}ωt)`;
+                }
+                if(c.bn !== 0) {
+                    html += ` + ${c.bn.toFixed(4)}sin(${c.n}ωt)`;
+                }
+            });
+            
+            html += `</div>`;
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function getOriginalWaveform(type, t, omega, A) {
+            const period = 2 * Math.PI / omega;
+            const phase = (t % period) / period;
+            
+            switch(type) {
+                case 'square':
+                    return phase < 0.5 ? A : -A;
+                
+                case 'square_positive':
+                    return phase < 0.5 ? A : 0;
+                    
+                case 'sawtooth':
+                    return 2 * A * (phase - 0.5);
+                    
+                case 'triangle':
+                    if(phase < 0.25) return 4 * A * phase;
+                    if(phase < 0.75) return A * (2 - 4 * phase);
+                    return A * (4 * phase - 4);
+                    
+                case 'halfwave':
+                    return phase < 0.5 ? A * Math.sin(2 * Math.PI * phase) : 0;
+                    
+                case 'fullwave':
+                    return A * Math.abs(Math.sin(2 * Math.PI * phase));
+                    
+                default:
+                    return 0;
+            }
+        }
+        
+        function drawWaveform(type, a0, coeffs, omega, A) {
+            const canvas = document.getElementById('waveCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            // Griglia
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for(let i = 0; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * h / 10);
+                ctx.lineTo(w, i * h / 10);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(i * w / 10, 0);
+                ctx.lineTo(i * w / 10, h);
+                ctx.stroke();
+            }
+            
+            // Asse centrale
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, h/2);
+            ctx.lineTo(w, h/2);
+            ctx.stroke();
+            
+            const periods = 2;
+            const points = 1000;
+            
+            // Forma d'onda originale (rosso)
+            ctx.strokeStyle = '#ff3333';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            
+            for(let i = 0; i <= points; i++) {
+                const t = (i / points) * periods * (2 * Math.PI / omega);
+                let y = getOriginalWaveform(type, t, omega, A);
+                
+                const x = (i / points) * w;
+                const py = h/2 - (y / (A * 2)) * h * 0.8;
+                
+                if(i === 0) {
+                    ctx.moveTo(x, py);
+                } else {
+                    ctx.lineTo(x, py);
+                }
+            }
+            
+            ctx.stroke();
+            
+            // Forma d'onda ricostruita con Fourier (blu)
+            ctx.strokeStyle = '#3366ff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            
+            for(let i = 0; i <= points; i++) {
+                const t = (i / points) * periods * (2 * Math.PI / omega);
+                let y = a0;
+                
+                coeffs.forEach(c => {
+                    y += c.an * Math.cos(c.n * omega * t);
+                    y += c.bn * Math.sin(c.n * omega * t);
+                });
+                
+                const x = (i / points) * w;
+                const py = h/2 - (y / (A * 2)) * h * 0.8;
+                
+                if(i === 0) {
+                    ctx.moveTo(x, py);
+                } else {
+                    ctx.lineTo(x, py);
+                }
+            }
+            
+            ctx.stroke();
+        }
+        
+        // Calcolo iniziale
+        calculate();
+    </script>
+</body>
+</html>
