@@ -1,41 +1,142 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codice colore</title>
+    <title>Codice Colore - Sigma Gooners</title>
     <style>
-        body {
-            background-color: rgba(64, 103, 138, 0.548);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .rainbow-text {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow 3s linear infinite;
+            font-weight: bold;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.3);
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         h2 {
-            margin-bottom: 10px;
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .input-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
         }
 
         label {
             display: block;
-            margin: 10px 0;
+            margin: 1.5rem 0;
+            font-weight: 500;
+            color: #333;
         }
 
-        select {
-            padding: 5px;
+        select, input {
+            padding: 0.8rem;
             margin-left: 10px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         input {
-            padding: 5px;
-            width: 150px;
-            margin-left: 10px;
+            width: 200px;
         }
 
+        select {
+            min-width: 200px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Colori delle bande */
         .black {
             background-color: black;
             color: white;
@@ -64,7 +165,7 @@
             color: white;
         }
 
-        .blue {
+        .blu {
             background-color: blue;
             color: white;
         }
@@ -91,101 +192,125 @@
         .silver {
             background-color: silver;
         }
+
+        .section-divider {
+            border-top: 2px solid #667eea;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <h2>Calcolatore codice colore</h2>
-    <br>
-    <a href="/telecom/index.html" class="back-btn">← Torna al Sito</a>
-    
-    <label>Valore resistenza (Ω):
-        <input type="number" id="resValue" placeholder="es. 4700">
-    </label>
+    <div class="container">
+        <a href="/telecom/index.html" class="back-btn">← Torna al Sito</a>
 
-    <label>Tolleranza (%):
-        <input type="number" id="tolValue" placeholder="es. 5">
-    </label>
-    <br><br>
+        <div class="main-card">
+            <h2>Calcolatore <span class="rainbow-text">Codice Colore</span></h2>
 
-    <div>
-        <label>1 Banda (cifra):
-            <select id="band1" class="band-select">
-                <option value="0" class="black" data-color="black">Nero (0)</option>
-                <option value="1" class="brown" data-color="brown">Marrone (1)</option>
-                <option value="2" class="red" data-color="red">Rosso (2)</option>
-                <option value="3" class="orange" data-color="orange">Arancione (3)</option>
-                <option value="4" class="yellow" data-color="yellow">Giallo (4)</option>
-                <option value="5" class="green" data-color="green">Verde (5)</option>
-                <option value="6" class="blu" data-color="blue">Blu (6)</option>
-                <option value="7" class="violet" data-color="violet">Viola (7)</option>
-                <option value="8" class="gray" data-color="gray">Grigio (8)</option>
-                <option value="9" class="white" data-color="white">Bianco (9)</option>
-            </select>
-            <span id="color1" class="color-box"></span>
-        </label>
+            <div class="input-section">
+                <label>Valore resistenza (Ω):
+                    <input type="number" id="resValue" placeholder="es. 4700">
+                </label>
+
+                <label>Tolleranza (%):
+                    <input type="number" id="tolValue" placeholder="es. 5">
+                </label>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div>
+                <label>1 Banda (cifra):
+                    <select id="band1" class="band-select">
+                        <option value="0" class="black" data-color="black">Nero (0)</option>
+                        <option value="1" class="brown" data-color="brown">Marrone (1)</option>
+                        <option value="2" class="red" data-color="red">Rosso (2)</option>
+                        <option value="3" class="orange" data-color="orange">Arancione (3)</option>
+                        <option value="4" class="yellow" data-color="yellow">Giallo (4)</option>
+                        <option value="5" class="green" data-color="green">Verde (5)</option>
+                        <option value="6" class="blu" data-color="blue">Blu (6)</option>
+                        <option value="7" class="violet" data-color="violet">Viola (7)</option>
+                        <option value="8" class="gray" data-color="gray">Grigio (8)</option>
+                        <option value="9" class="white" data-color="white">Bianco (9)</option>
+                    </select>
+                    <span id="color1" class="color-box"></span>
+                </label>
+            </div>
+
+            <div>
+                <label>2 Banda (cifra):
+                    <select id="band2" class="band-select">
+                        <option value="0" class="black" data-color="black">Nero (0)</option>
+                        <option value="1" class="brown" data-color="brown">Marrone (1)</option>
+                        <option value="2" class="red" data-color="red">Rosso (2)</option>
+                        <option value="3" class="orange" data-color="orange">Arancione (3)</option>
+                        <option value="4" class="yellow" data-color="yellow">Giallo (4)</option>
+                        <option value="5" class="green" data-color="green">Verde (5)</option>
+                        <option value="6" class="blu" data-color="blue">Blu (6)</option>
+                        <option value="7" class="violet" data-color="violet">Viola (7)</option>
+                        <option value="8" class="gray" data-color="gray">Grigio (8)</option>
+                        <option value="9" class="white" data-color="white">Bianco (9)</option>
+                    </select>
+                    <span id="color2" class="color-box"></span>
+                </label>
+            </div>
+
+            <div>
+                <label>Moltiplicatore:
+                    <select id="mult" class="band-select">
+                        <option value="1" class="black" data-color="black">Nero (×1)</option>
+                        <option value="10" class="brown" data-color="brown">Marrone (×10)</option>
+                        <option value="100" class="red" data-color="red">Rosso (×100)</option>
+                        <option value="1000" class="orange" data-color="orange">Arancione (×1k)</option>
+                        <option value="10000" class="yellow" data-color="yellow">Giallo (×10k)</option>
+                        <option value="100000" class="green" data-color="green">Verde (×100k)</option>
+                        <option value="1000000" class="blu" data-color="blue">Blu (×1M)</option>
+                        <option value="10000000" class="violet" data-color="violet">Viola (×10M)</option>
+                        <option value="100000000" class="gray" data-color="gray">Grigio (×100M)</option>
+                        <option value="1000000000" class="white" data-color="white">Bianco (×1G)</option>
+                        <option value="0.1" class="gold" data-color="gold">Oro (×0.1)</option>
+                        <option value="0.01" class="silver" data-color="silver">Argento (×0.01)</option>
+                    </select>
+                    <span id="colorMult" class="color-box"></span>
+                </label>
+            </div>
+
+            <div>
+                <label>Tolleranza:
+                    <select id="tol" class="band-select">
+                        <option value="1" class="brown" data-color="brown">Marrone (±1%)</option>
+                        <option value="2" class="red" data-color="red">Rosso (±2%)</option>
+                        <option value="0.5" class="green" data-color="green">Verde (±0.5%)</option>
+                        <option value="0.25" class="blu" data-color="blue">Blu (±0.25%)</option>
+                        <option value="0.1" class="violet" data-color="violet">Viola (±0.1%)</option>
+                        <option value="0.05" class="gray" data-color="gray">Grigio (±0.05%)</option>
+                        <option value="5" class="gold" data-color="gold">Oro (±5%)</option>
+                        <option value="10" class="silver" data-color="silver">Argento (±10%)</option>
+                    </select>
+                    <span id="colorTol" class="color-box"></span>
+                </label>
+            </div>
+
+            <div class="button-container">
+                <button type="button" id="calcola" onclick="calcoloNumerico()">Calcolo colori → valori</button>
+                <button type="button" id="calcola2" onclick="calcoloColori()">Calcolo valori → colori</button>
+            </div>
+        </div>
     </div>
-
-    <div>
-        <label>2 Banda (cifra):
-            <select id="band2" class="band-select">
-                <option value="0" class="black" data-color="black">Nero (0)</option>
-                <option value="1" class="brown" data-color="brown">Marrone (1)</option>
-                <option value="2" class="red" data-color="red">Rosso (2)</option>
-                <option value="3" class="orange" data-color="orange">Arancione (3)</option>
-                <option value="4" class="yellow" data-color="yellow">Giallo (4)</option>
-                <option value="5" class="green" data-color="green">Verde (5)</option>
-                <option value="6" class="blu" data-color="blue">Blu (6)</option>
-                <option value="7" class="violet" data-color="violet">Viola (7)</option>
-                <option value="8" class="gray" data-color="gray">Grigio (8)</option>
-                <option value="9" class="white" data-color="white">Bianco (9)</option>
-            </select>
-            <span id="color2" class="color-box"></span>
-        </label>
-    </div>
-
-    <div>
-        <label>Moltiplicatore:
-            <select id="mult" class="band-select">
-                <option value="1" class="black" data-color="black">Nero (×1)</option>
-                <option value="10" class="brown" data-color="brown">Marrone (×10)</option>
-                <option value="100" class="red" data-color="red">Rosso (×100)</option>
-                <option value="1000" class="orange" data-color="orange">Arancione (×1k)</option>
-                <option value="10000" class="yellow" data-color="yellow">Giallo (×10k)</option>
-                <option value="100000" class="green" data-color="green">Verde (×100k)</option>
-                <option value="1000000" class="blu" data-color="blue">Blu (×1M)</option>
-                <option value="10000000" class="violet" data-color="violet">Viola (×10M)</option>
-                <option value="100000000" class="gray" data-color="gray">Grigio (×100M)</option>
-                <option value="1000000000" class="white" data-color="white">Bianco (×1G)</option>
-                <option value="0.1" class="gold" data-color="gold">Oro (×0.1)</option>
-                <option value="0.01" class="silver" data-color="silver">Argento (×0.01)</option>
-            </select>
-            <span id="colorMult" class="color-box"></span>
-        </label>
-    </div>
-
-    <div>
-        <label>Tolleranza:
-            <select id="tol" class="band-select">
-                <option value="1" class="brown" data-color="brown">Marrone (±1%)</option>
-                <option value="2" class="red" data-color="red">Rosso (±2%)</option>
-                <option value="0.5" class="green" data-color="green">Verde (±0.5%)</option>
-                <option value="0.25" class="blu" data-color="blue">Blu (±0.25%)</option>
-                <option value="0.1" class="violet" data-color="violet">Viola (±0.1%)</option>
-                <option value="0.05" class="gray" data-color="gray">Grigio (±0.05%)</option>
-                <option value="5" class="gold" data-color="gold">Oro (±5%)</option>
-                <option value="10" class="silver" data-color="silver">Argento (±10%)</option>
-            </select>
-            <span id="colorTol" class="color-box"></span>
-        </label>
-    </div>
-
-
-    <div>
-        <button type="button" id="calcola" onclick="calcoloNumerico()">Calcolo colori - valori</button> <button
-            type="button" id="calcola2" onclick="calcoloColori()">Calcolo valori - colori</button>
-    </div>
-
 
     <script>
         function calcoloNumerico() {
@@ -221,7 +346,6 @@
             const tolerances = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10];
             let closestTol = tolerances.reduce((prev, curr) => Math.abs(curr - tolVal) < Math.abs(prev - tolVal) ? curr : prev);
             document.getElementById("tol").value = closestTol;
-
         }
     </script>
 
