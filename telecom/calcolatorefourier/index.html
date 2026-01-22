@@ -226,7 +226,7 @@
 
                 <div class="form-group">
                     <label for="harmonics">Numero di Armoniche:</label>
-                    <input type="number" id="harmonics" value="5" step="1" min="1" max="79">
+                    <input type="number" id="harmonics" value="5" step="1" min="1" max="100">
                 </div>
 
                 <button onclick="calculate()">Calcola Coefficienti</button>
@@ -265,9 +265,11 @@
                 case 'square':
                     a0 = 0;
                     description = "Onda Quadra";
-                    for(let n = 1; n <= N; n++) {
+                    // Solo armoniche dispari
+                    for(let i = 0; i < N; i++) {
+                        const n = 2 * i + 1; // 1, 3, 5, 7, ...
                         an = 0;
-                        bn = (n % 2 === 1) ? (4 * A) / (n * Math.PI) : 0;
+                        bn = (4 * A) / (n * Math.PI);
                         coeffs.push({n, an, bn});
                     }
                     break;
@@ -275,9 +277,11 @@
                 case 'square_positive':
                     a0 = A / 2;
                     description = "Onda Quadra Positiva";
-                    for(let n = 1; n <= N; n++) {
+                    // Solo armoniche dispari
+                    for(let i = 0; i < N; i++) {
+                        const n = 2 * i + 1; // 1, 3, 5, 7, ...
                         an = 0;
-                        bn = (n % 2 === 1) ? (2 * A) / (n * Math.PI) : 0;
+                        bn = (2 * A) / (n * Math.PI);
                         coeffs.push({n, an, bn});
                     }
                     break;
@@ -285,6 +289,7 @@
                 case 'sawtooth':
                     a0 = 0;
                     description = "Onda a Dente di Sega";
+                    // Tutte le armoniche
                     for(let n = 1; n <= N; n++) {
                         an = 0;
                         bn = -(2 * A) / (n * Math.PI);
@@ -295,8 +300,10 @@
                 case 'triangle':
                     a0 = 0;
                     description = "Onda Triangolare";
-                    for(let n = 1; n <= N; n++) {
-                        an = (n % 2 === 1) ? (8 * A) / (Math.pow(n * Math.PI, 2)) * (n % 4 === 1 ? 1 : -1) : 0;
+                    // Solo armoniche dispari
+                    for(let i = 0; i < N; i++) {
+                        const n = 2 * i + 1; // 1, 3, 5, 7, ...
+                        an = (8 * A) / (Math.pow(n * Math.PI, 2)) * (i % 2 === 0 ? 1 : -1);
                         bn = 0;
                         coeffs.push({n, an, bn});
                     }
@@ -305,17 +312,12 @@
                 case 'halfwave':
                     a0 = A / Math.PI;
                     description = "Onda Rettificata (Half-wave)";
-                    for(let n = 1; n <= N; n++) {
-                        if(n === 1) {
-                            an = A / 2;
-                            bn = 0;
-                        } else if(n % 2 === 0) {
-                            an = -(2 * A) / (Math.PI * (n * n - 1));
-                            bn = 0;
-                        } else {
-                            an = 0;
-                            bn = 0;
-                        }
+                    // n=1 + solo pari
+                    coeffs.push({n: 1, an: A / 2, bn: 0});
+                    for(let i = 1; i < N; i++) {
+                        const n = 2 * i; // 2, 4, 6, 8, ...
+                        an = -(2 * A) / (Math.PI * (n * n - 1));
+                        bn = 0;
                         coeffs.push({n, an, bn});
                     }
                     break;
@@ -323,14 +325,11 @@
                 case 'fullwave':
                     a0 = (2 * A) / Math.PI;
                     description = "Onda Rettificata (Full-wave)";
-                    for(let n = 1; n <= N; n++) {
-                        if(n % 2 === 0) {
-                            an = -(4 * A) / (Math.PI * (n * n - 1));
-                            bn = 0;
-                        } else {
-                            an = 0;
-                            bn = 0;
-                        }
+                    // Solo armoniche pari
+                    for(let i = 1; i <= N; i++) {
+                        const n = 2 * i; // 2, 4, 6, 8, ...
+                        an = -(4 * A) / (Math.PI * (n * n - 1));
+                        bn = 0;
                         coeffs.push({n, an, bn});
                     }
                     break;
@@ -352,7 +351,7 @@
             html += `<div class="coefficients">`;
             html += `<div class="coeff-item"><strong>a₀ (componente continua)</strong> = ${a0.toFixed(6)}</div>`;
             
-            // Mostra TUTTI i coefficienti richiesti
+            // Mostra TUTTI i coefficienti generati
             coeffs.forEach(c => {
                 html += `<div class="coeff-item">
                     <strong>n = ${c.n}:</strong><br>
