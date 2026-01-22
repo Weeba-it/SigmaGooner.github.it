@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -43,6 +42,28 @@
         .header p {
             font-size: 1.1em;
             opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin: 20px 30px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
         }
 
         .content {
@@ -205,7 +226,7 @@
 
                 <div class="form-group">
                     <label for="harmonics">Numero di Armoniche:</label>
-                    <input type="number" id="harmonics" value="5" step="1" min="1" max="20">
+                    <input type="number" id="harmonics" value="5" step="1" min="1" max="79">
                 </div>
 
                 <button onclick="calculate()">Calcola Coefficienti</button>
@@ -331,14 +352,14 @@
             html += `<div class="coefficients">`;
             html += `<div class="coeff-item"><strong>a₀ (componente continua)</strong> = ${a0.toFixed(6)}</div>`;
             
+            // Mostra TUTTI i coefficienti richiesti
             coeffs.forEach(c => {
-                if(c.an !== 0 || c.bn !== 0) {
-                    html += `<div class="coeff-item">
-                        <strong>n = ${c.n}:</strong><br>
-                        a${c.n} = ${c.an.toFixed(6)}<br>
-                        b${c.n} = ${c.bn.toFixed(6)}
-                    </div>`;
-                }
+                html += `<div class="coeff-item">
+                    <strong>n = ${c.n}:</strong><br>
+                    Frequenza: ${(c.n * f).toFixed(4)} Hz<br>
+                    Ampiezza aₙ: ${c.an.toFixed(6)}<br>
+                    Ampiezza bₙ: ${c.bn.toFixed(6)}
+                </div>`;
             });
             
             html += `</div>`;
