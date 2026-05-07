@@ -1,1 +1,425 @@
-fica
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aura Foods — Admin Broadcast</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rainbow-text {
+    background: linear-gradient(
+      90deg,
+      #ff0000,
+      #ff7f00,
+      #ffff00,
+      #00ff00,
+      #0000ff,
+      #4b0082,
+      #9400d3
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rainbow 3s linear infinite;
+    font-weight: bold;
+  }
+
+  @keyframes rainbow {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+
+  nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  /* PASSWORD MODAL */
+  .password-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .password-modal.active {
+    display: flex;
+  }
+
+  .password-box {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  .password-box h3 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .password-box input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    font-family: inherit;
+  }
+
+  .password-box button {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0.5rem;
+    transition: transform 0.2s;
+    font-family: inherit;
+  }
+
+  .password-box button:hover {
+    transform: translateY(-2px);
+  }
+
+  .error-message {
+    color: red;
+    margin-top: 1rem;
+    display: none;
+    font-weight: 600;
+  }
+
+  .error-message.show {
+    display: block;
+  }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    max-width: 700px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    width: 100%;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+  }
+
+  .feature-card h3 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+  }
+
+  .field-label {
+    display: block;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .field-input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 1.4rem;
+    transition: border-color 0.2s;
+    color: #333;
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-color: #667eea;
+  }
+
+  textarea.field-input {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+  }
+
+  /* PREVIEW */
+  .preview-box {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 2px dashed #667eea55;
+  }
+
+  .preview-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin-bottom: 8px;
+  }
+
+  .preview-notif-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+    margin-bottom: 3px;
+  }
+
+  .preview-notif-body {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+
+  /* STATUS */
+  .status-box {
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    display: none;
+  }
+
+  .status-box.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+  }
+
+  .status-box.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+  }
+
+  .status-box.loading {
+    background: #e8eaff;
+    color: #3a4aaa;
+    border: 1px solid #c5cbf5;
+    display: block;
+  }
+
+  /* BTN */
+  .btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+    width: 100%;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102,126,234,0.6);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  footer {
+    background: #2d3748;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin-top: auto;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo"><span class="rainbow-text">Sigma Gooners</span></div>
+    <div style="color:white;font-weight:600;opacity:.8">🔐 Admin Panel</div>
+  </nav>
+</header>
+
+<!-- PASSWORD MODAL -->
+<div class="password-modal active" id="passwordModal">
+  <div class="password-box">
+    <h3>🔐 Accesso Admin</h3>
+    <p style="color:#666;margin-bottom:1.5rem;font-size:.95rem">
+      Inserisci la password per accedere al pannello broadcast notifiche
+    </p>
+    <input type="password" id="passwordInput" placeholder="Password..."
+      onkeydown="if(event.key==='Enter')checkPassword()"/>
+    <div>
+      <button onclick="checkPassword()">Entra</button>
+    </div>
+    <p class="error-message" id="errorMessage">Password errata!</p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<main id="adminPanel" style="display:none">
+  <div class="feature-card">
+    <h3>📢 Broadcast <span class="rainbow-text">Notifiche Push</span></h3>
+
+    <label class="field-label">Titolo notifica</label>
+    <input type="text" class="field-input" id="notif-title"
+      placeholder="es. Aura Foods" oninput="updatePreview()"/>
+
+    <label class="field-label">Messaggio</label>
+    <textarea class="field-input" id="notif-body"
+      placeholder="es. Novità in arrivo per tutti gli utenti! 🌿"
+      oninput="updatePreview()"></textarea>
+
+    <div class="preview-box">
+      <div class="preview-label">Anteprima notifica</div>
+      <div class="preview-notif-title" id="prev-title">Titolo...</div>
+      <div class="preview-notif-body" id="prev-body">Messaggio...</div>
+    </div>
+
+    <div class="status-box" id="status-box"></div>
+
+    <button class="btn btn-primary" id="send-btn" onclick="sendBroadcast()">
+      Invia a tutti 🔔
+    </button>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 <span class="rainbow-text">Sigma Gooners</span>. Tutti i diritti riservati.</p>
+  <p>Servizi di segreteria anale e trans</p>
+</footer>
+
+<script>
+  const SUPABASE_URL     = 'https://aoulslptqvqpybhhiaof.supabase.co';
+  const ANON_KEY         = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvdWxzbHB0cXZxcHliaGhpYW9mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MzYxNzUsImV4cCI6MjA5MzExMjE3NX0.oR4e10k4d5daBfw2VN34ld_Cx6lbVVg_QtOiKx0aAiQ';
+  const ADMIN_PASSWORD   = 'odioinegri';
+  const BROADCAST_SECRET = 'unaPasswordSegretaTua123';
+
+  function checkPassword() {
+    const val = document.getElementById('passwordInput').value;
+    if (val === ADMIN_PASSWORD) {
+      document.getElementById('passwordModal').classList.remove('active');
+      document.getElementById('adminPanel').style.display = 'block';
+    } else {
+      document.getElementById('errorMessage').classList.add('show');
+      setTimeout(() => document.getElementById('errorMessage').classList.remove('show'), 2000);
+    }
+  }
+
+  function updatePreview() {
+    const t = document.getElementById('notif-title').value || 'Titolo...';
+    const b = document.getElementById('notif-body').value  || 'Messaggio...';
+    document.getElementById('prev-title').textContent = t;
+    document.getElementById('prev-body').textContent  = b;
+  }
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('status-box');
+    el.textContent = msg;
+    el.className   = 'status-box ' + type;
+  }
+
+  async function sendBroadcast() {
+    const title = document.getElementById('notif-title').value.trim();
+    const body  = document.getElementById('notif-body').value.trim();
+
+    if (!title || !body) {
+      setStatus('⚠️ Compila titolo e messaggio prima di inviare.', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('send-btn');
+    btn.disabled = true;
+    setStatus('⏳ Invio in corso...', 'loading');
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/send-broadcast`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${ANON_KEY}`
+        },
+        body: JSON.stringify({ secret: BROADCAST_SECRET, title, body })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.ok) {
+        setStatus(`✅ Inviato! ${data.inviati} notifiche consegnate, ${data.falliti} fallite.`, 'success');
+        document.getElementById('notif-title').value = '';
+        document.getElementById('notif-body').value  = '';
+        updatePreview();
+      } else {
+        setStatus('❌ Errore: ' + (data.error || res.statusText), 'error');
+      }
+    } catch(err) {
+      setStatus('❌ Errore di rete: ' + err.message, 'error');
+    }
+
+    btn.disabled = false;
+  }
+</script>
+
+</body>
+</html>
